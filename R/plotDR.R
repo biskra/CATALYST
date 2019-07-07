@@ -34,7 +34,7 @@ setMethod("plotDR",
     signature=signature(x = "daFrame"),
     definition=function(x, 
         dr=c("TSNE", "PCA", "MDS", "UMAP", "DiffusionMap"), 
-        color_by = "meta20", facet = NULL) {
+        color_by = "meta20", pt.size = 0.8, facet = NULL) {
         
         dr <- match.arg(dr)
         stopifnot(dr %in% reducedDimNames(x))
@@ -67,7 +67,7 @@ setMethod("plotDR",
         
         if (color_by %in% colnames(x)) {
             p <- p +
-                geom_point(size=.8, aes_string(color=color_by)) +
+                geom_point(size=pt.size, aes_string(color=color_by)) +
                 scale_color_viridis_c()
         } else if (color_by %in% names(cluster_codes(x))) {
             # get cluster IDs
@@ -82,12 +82,12 @@ setMethod("plotDR",
             names(cols) <- levels(cluster_ids)
             if (nk > 10) n_col <- 2 else n_col <- 1
             p <- p + 
-                geom_point(data=df, size=.8, aes_string(color="cluster_id")) +
+                geom_point(data=df, size=pt.size, aes_string(color="cluster_id")) +
                 guides(color=guide_legend(override.aes=list(size=3),
                     ncol=n_col)) + scale_color_manual(values=cols)
         } else (
             p <- p + 
-                geom_point(data=df, size=.8, aes_string(color=color_by)) +
+                geom_point(data=df, size=pt.size, aes_string(color=color_by)) +
                 guides(color=guide_legend(override.aes=list(size=3)))
         )
         if (is.null(facet)) p else p + facet_wrap(facet, ncol=4)
